@@ -1,0 +1,955 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.OData.Routing</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.IODataFeature">
+            <summary>
+            Provide the interface for the details of a given OData request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.Path">
+            <summary>
+            Gets or sets the OData path.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.RoutePrefix">
+            <summary>
+            Gets or sets the route name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.ActionDescriptor">
+            <summary>
+            Gets or sets the selected action descriptor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.IsEndpointRouting">
+            <summary>
+            Add a boolean value indicate whether it's endpoint routing or not.
+            Maybe it's unnecessary later.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.RouteName">
+            <summary>
+            Gets or sets the route name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.RequestScope">
+            <summary>
+            Gets or sets the request scope.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.RequestContainer">
+            <summary>
+            Gets or sets the request container.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.NextLink">
+            <summary>
+            Gets or sets the next link for the OData response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.BatchRouteData">
+            <summary>
+            Gets or sets the batch route data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.DeltaLink">
+            <summary>
+            Gets or sets the delta link for the OData response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.UrlHelper">
+            <summary>
+            Gets or sets the Url helper.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.TotalCount">
+            <summary>
+            Gets or sets the total count for the OData response.
+            </summary>
+            <value><c>null</c> if no count should be sent back to the client.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.TotalCountFunc">
+            <summary>
+            Gets or sets the total count function for the OData response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.ApplyClause">
+            <summary>
+            Gets or sets the parsed OData <see cref="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.ApplyClause"/> of the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.SelectExpandClause">
+            <summary>
+            Gets or sets the parsed OData <see cref="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.SelectExpandClause"/> of the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.RoutingConventionsStore">
+            <summary>
+            Gets the data store used by <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataRoutingConvention"/>s to store any custom route data.
+            </summary>
+            <value>Initially an empty <c>IDictionary&lt;string, object&gt;</c>.</value>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.IODataPathHandler">
+            <summary>
+            Exposes the ability to parse an OData path as an <see cref="!:ODataPath"/> and convert an <see cref="!:ODataPath"/> into an OData link.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.IODataRoutingConvention">
+            <summary>
+            Provides an abstraction for selecting a controller and an action for OData requests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.IODataRoutingConvention.SelectAction(Microsoft.AspNetCore.Routing.RouteContext)">
+            <summary>
+            Selects the controller and action for OData requests.
+            </summary>
+            <param name="routeContext">The route context.</param>
+            <returns>
+            <c>null</c> if the request isn't handled by this convention;
+             otherwise, the <see cref="T:Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor"/> of the selected controller.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.IPerRouteContainer">
+            <summary>
+            An interface for managing per-route service containers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.IPerRouteContainer.AddRoute(System.String,System.String)">
+            <summary>
+            Add a routing mapping
+            </summary>
+            <param name="routeName">The route name</param>
+            <param name="routePrefix">The route prefix</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.IPerRouteContainer.GetRoutePrefix(System.String)">
+            <summary>
+            Get the route prefix
+            </summary>
+            <param name="routeName">The route name.</param>
+            <returns>The route prefix.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IPerRouteContainer.BuilderFactory">
+            <summary>
+            Gets or sets a function to build an <see cref="T:Microsoft.OData.IContainerBuilder"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.IPerRouteContainer.CreateODataRootContainer(System.String,System.Action{Microsoft.OData.IContainerBuilder})">
+            <summary>
+            Create a root container for a given route name.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <param name="configureAction">The configuration actions to apply to the container.</param>
+            <returns>An instance of <see cref="T:System.IServiceProvider"/> to manage services for a route.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.IPerRouteContainer.HasODataRootContainer(System.String)">
+            <summary>
+            Check if the root container for a given route name exists.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <returns>true if root container for the route name exists, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.IPerRouteContainer.GetODataRootContainer(System.String)">
+            <summary>
+            Get the root container for a given route name.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <returns>The root container for the route name.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler">
+            <summary>
+            Defines the abstraction for handling OData batch requests.
+            </summary>
+            <remarks>
+            This class implements a BatchHandler semantics for AspNetCore, which uses
+            an <see cref="T:Microsoft.AspNetCore.Routing.IRouter"/> for dispatching requests.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.MessageQuotas">
+            <summary>
+            Gets the <see cref="T:Microsoft.OData.ODataMessageQuotas"/> used for reading/writing the batch request/response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.ODataRouteName">
+            <summary>
+            Gets or sets the name of the OData route associated with this batch handler.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.ContinueOnError">
+            <summary>
+            Gets or sets if the continue-on-error header is enable or not.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.SetContinueOnError(Microsoft.AspNetCore.Http.IHeaderDictionary,System.Boolean)">
+            <summary>
+            Set ContinueOnError based on the request and headers.
+            </summary>
+            <param name="header">The request header.</param>
+            <param name="enableContinueOnErrorHeader">Flag indicating if continue on error header is enabled.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.ProcessBatchAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Abstract method for processing a batch request.
+            </summary>
+            <param name="context">The http content.</param>
+            ><param name="nextHandler">The next handler in the middleware chain.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.CreateResponseMessageAsync(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.OData.Routing.ODataBatchResponseItem},Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Creates the batch response message.
+            </summary>
+            <param name="responses">The responses for the batch requests.</param>
+            <param name="request">The original request containing all the batch requests.</param>
+            <returns>The batch response message.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.ValidateRequest(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Validates the incoming request that contains the batch request messages.
+            </summary>
+            <param name="request">The request containing the batch request messages.</param>
+            <returns>true if the request is valid, otherwise false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler.GetBaseUri(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Gets the base URI for the batched requests.
+            </summary>
+            <param name="request">The original request containing all the batch requests.</param>
+            <returns>The base URI.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataBatchPathMapping">
+            <summary>
+            A class for storing batch route names and prefixes used to determine if a route is a
+            batch route.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataBatchPathMapping.IsEndpointRouting">
+            <summary>
+            Gets/sets a boolean value indicating whether it's endpoint routing.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchPathMapping.AddRoute(System.String,System.String)">
+            <summary>
+            Add a route name and template for batching.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <param name="routeTemplate">The route template.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchPathMapping.TryGetRouteName(Microsoft.AspNetCore.Http.HttpContext,System.String@)">
+            <summary>
+            Try and get the batch handler for a given path.
+            </summary>
+            <param name="context">The http context.</param>
+            <param name="routeName">The route name if found or null.</param>
+            <returns>true if a route name is found, otherwise false.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataBatchResponseItem">
+            <summary>
+            Represents an OData batch response.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchResponseItem.WriteMessageAsync(Microsoft.OData.ODataBatchWriter,Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Writes a single OData batch response using a synchronous writer.
+            </summary>
+            <param name="writer">The <see cref="T:Microsoft.OData.ODataBatchWriter"/>.</param>
+            <param name="context">The message context.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchResponseItem.WriteMessageAsync(Microsoft.OData.ODataBatchWriter,Microsoft.AspNetCore.Http.HttpContext,System.Boolean)">
+            <summary>
+            Writes a single OData batch response.
+            </summary>
+            <param name="writer">The <see cref="T:Microsoft.OData.ODataBatchWriter"/>.</param>
+            <param name="context">The message context.</param>
+            <param name="asyncWriter">Whether or not the writer is in async mode. </param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchResponseItem.WriteResponseAsync(Microsoft.OData.ODataBatchWriter)">
+            <summary>
+            Writes the response to a synchronous writer.
+            </summary>
+            <param name="writer">The <see cref="T:Microsoft.OData.ODataBatchWriter"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchResponseItem.WriteResponseAsync(Microsoft.OData.ODataBatchWriter,System.Boolean)">
+            <summary>
+            Writes the response.
+            </summary>
+            <param name="writer">The <see cref="T:Microsoft.OData.ODataBatchWriter"/>.</param>
+            <param name="asyncWriter">Whether or not the writer is writing asynchronously.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataBatchResponseItem.IsResponseSuccessful">
+            <summary>
+            Gets a value that indicates if the responses in this item are successful.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.MetadataController">
+            <summary>
+            Represents a controller for generating OData servicedoc and metadata document ($metadata).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.MetadataController.GetMetadata">
+            <summary>
+            Generates the OData $metadata document.
+            </summary>
+            <returns>The <see cref="T:Microsoft.OData.Edm.IEdmModel"/> representing $metadata.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.MetadataController.GetServiceDocument">
+            <summary>
+            Generates the OData service document.
+            </summary>
+            <returns>The service document for the service.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataController">
+            <summary>
+            Defines a base class for OData controllers that support writing and reading data using the OData formats.
+            </summary>
+            <remarks>These attributes and signature uses types that are AspNetCore-specific.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataController.Created``1(``0)">
+            <summary>
+            Creates an action result with the specified values that is a response to a POST operation with an entity
+            to an entity set.
+            </summary>
+            <typeparam name="TEntity">The created entity type.</typeparam>
+            <param name="entity">The created entity.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.OData.Routing.CreatedODataResult`1"/> with the specified values.</returns>
+            <remarks>These function uses types that are AspNetCore-specific.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataController.Updated``1(``0)">
+            <summary>
+            Creates an action result with the specified values that is a response to a PUT, PATCH, or a MERGE operation
+            on an OData entity.
+            </summary>
+            <typeparam name="TEntity">The updated entity type.</typeparam>
+            <param name="entity">The updated entity.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.OData.Routing.UpdatedODataResult`1"/> with the specified values.</returns>
+            <remarks>These function uses types that are AspNetCore-specific.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.DefaultContainerBuilder">
+            <summary>
+            The default container builder implementation based on the Microsoft dependency injection framework.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.DefaultContainerBuilder.AddService(Microsoft.OData.ServiceLifetime,System.Type,System.Type)">
+            <summary>
+            Adds a service of <paramref name="serviceType"/> with an <paramref name="implementationType"/>.
+            </summary>
+            <param name="lifetime">The lifetime of the service to register.</param>
+            <param name="serviceType">The type of the service to register.</param>
+            <param name="implementationType">The implementation type of the service.</param>
+            <returns>The <see cref="T:Microsoft.OData.IContainerBuilder"/> instance itself.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.DefaultContainerBuilder.AddService(Microsoft.OData.ServiceLifetime,System.Type,System.Func{System.IServiceProvider,System.Object})">
+            <summary>
+            Adds a service of <paramref name="serviceType"/> with an <paramref name="implementationFactory"/>.
+            </summary>
+            <param name="lifetime">The lifetime of the service to register.</param>
+            <param name="serviceType">The type of the service to register.</param>
+            <param name="implementationFactory">The factory that creates the service.</param>
+            <returns>The <see cref="T:Microsoft.OData.IContainerBuilder"/> instance itself.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.DefaultContainerBuilder.BuildContainer">
+            <summary>
+            Builds a container which implements <see cref="T:System.IServiceProvider"/> and contains
+            all the services registered.
+            </summary>
+            <returns>The container built by this builder.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.HttpContextExtensions">
+            <summary>
+            Provides extension methods for the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpContextExtensions.ODataFeature(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Extension method to return the <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataFeature"/> from the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+            <param name="httpContext">The Http context.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataFeature"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions">
+            <summary>
+            Provides extension methods for the <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions.ODataFeature(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataFeature"/> from the services container.
+            </summary>
+            <param name="request">The request.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataFeature"/> from the services container.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions.GetPathHandler(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataPathHandler"/> from the request container.
+            </summary>
+            <param name="request">The request.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataPathHandler"/> from the request container.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions.GetModel(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Gets the <see cref="T:Microsoft.OData.Edm.IEdmModel"/> from the request container.
+            </summary>
+            <param name="request">The request.</param>
+            <returns>The <see cref="T:Microsoft.OData.Edm.IEdmModel"/> from the request container.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions.GetRequestContainer(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Gets the dependency injection container for the OData request.
+            </summary>
+            <param name="request">The request.</param>
+            <returns>The dependency injection container.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions.CreateRequestContainer(Microsoft.AspNetCore.Http.HttpRequest,System.String)">
+            <summary>
+            Creates a request container that associates with the <paramref name="request"/>.
+            </summary>
+            <param name="request">The request.</param>
+            <param name="routeName">The name of the route.</param>
+            <returns>The request container created.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions.DeleteRequestContainer(Microsoft.AspNetCore.Http.HttpRequest,System.Boolean)">
+            <summary>
+            Deletes the request container from the <paramref name="request"/> and disposes
+            the container if <paramref name="dispose"/> is <c>true</c>.
+            </summary>
+            <param name="request">The request.</param>
+            <param name="dispose">
+            Returns <c>true</c> to dispose the request container after deletion; <c>false</c> otherwise.
+            </param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.HttpRequestExtensions.CreateRequestScope(Microsoft.AspNetCore.Http.HttpRequest,System.String)">
+            <summary>
+            Create a scoped request.
+            </summary>
+            <param name="request">The request.</param>
+            <param name="routeName">The route name.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add OData routes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions.MapODataRoute(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,Microsoft.OData.Edm.IEdmModel)">
+            <summary>
+            Maps the specified OData route and the OData route attributes.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="routeName">The name of the route to map.</param>
+            <param name="routePrefix">The prefix to add to the OData route's path template.</param>
+            <param name="model">The EDM model to use for parsing OData paths.</param>
+            <returns>The input <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions.MapODataRoute(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.OData.Routing.ODataBatchHandler)">
+            <summary>
+            Maps the specified OData route and the OData route attributes. When the <paramref name="batchHandler"/> is
+            non-<c>null</c>, it will create a '$batch' endpoint to handle the batch requests.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="routeName">The name of the route to map.</param>
+            <param name="routePrefix">The prefix to add to the OData route's path template.</param>
+            <param name="model">The EDM model to use for parsing OData paths.</param>
+            <param name="batchHandler">The <see cref="T:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions.MapODataRoute(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.OData.Routing.IODataPathHandler,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.OData.Routing.IODataRoutingConvention})">
+            <summary>
+            Maps the specified OData route.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="routeName">The name of the route to map.</param>
+            <param name="routePrefix">The prefix to add to the OData route's path template.</param>
+            <param name="model">The EDM model to use for parsing OData paths.</param>
+            <param name="pathHandler">The <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataPathHandler"/> to use for parsing the OData path.</param>
+            <param name="routingConventions">
+            The OData routing conventions to use for controller and action selection.
+            </param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions.MapODataRoute(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.OData.Routing.IODataPathHandler,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.OData.Routing.IODataRoutingConvention},Microsoft.AspNetCore.OData.Routing.ODataBatchHandler)">
+            <summary>
+            Maps the specified OData route. When the <paramref name="batchHandler"/> is non-<c>null</c>, it will
+            create a '$batch' endpoint to handle the batch requests.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="routeName">The name of the route to map.</param>
+            <param name="routePrefix">The prefix to add to the OData route's path template.</param>
+            <param name="model">The EDM model to use for parsing OData paths.</param>
+            <param name="pathHandler">The <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataPathHandler" /> to use for parsing the OData path.</param>
+            <param name="routingConventions">
+            The OData routing conventions to use for controller and action selection.
+            </param>
+            <param name="batchHandler">The <see cref="T:Microsoft.AspNetCore.OData.Routing.ODataBatchHandler"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions.MapODataRoute(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,System.Action{Microsoft.OData.IContainerBuilder})">
+            <summary>
+            Maps the specified OData route and the OData route attributes.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="routeName">The name of the route to map.</param>
+            <param name="routePrefix">The prefix to add to the OData route's path template.</param>
+            <param name="configureAction">The configuring action to add the services to the root container.</param>
+            <returns>The input <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions.RemoveTrailingSlash(System.String)">
+            <summary>
+            Remote the trailing slash from a route prefix string.
+            </summary>
+            <param name="routePrefix">The route prefix string.</param>
+            <returns>The route prefix string without a trailing slash.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions.ConfigureDefaultServices(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.Action{Microsoft.OData.IContainerBuilder})">
+            <summary>
+            Configure the default services.
+            </summary>
+            <param name="routeBuilder">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <param name="configureAction">The configuring action to add the services to the root container.</param>
+            <returns>A configuring action to add the services to the root container.</returns>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataEndpointPattern.ODataEndpointPath">
+            <summary>
+            Wildcard route template for the OData Endpoint route pattern.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataEndpointPattern.ODataEndpointTemplate">
+            <summary>
+            Wildcard route template for the OData path route variable.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointPattern.CreateODataEndpointPattern(System.String,System.String)">
+            <summary>
+            Create an OData Endpoint route pattern.
+            The route pattern is in this format: "routePrefix/{*ODataEndpointPath_routeName}"
+            </summary>
+            <param name="routeName">The route name. It can not be null and verify upper layer.</param>
+            <param name="routePrefix">The route prefix. It could be null or empty</param>
+            <returns>The OData route endpoint pattern.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointPattern.GetODataRouteInfo(Microsoft.AspNetCore.Routing.RouteValueDictionary)">
+            <summary>
+            Get the OData route name and path value.
+            </summary>
+            <param name="values">The dictionary contains route value.</param>
+            <returns>A tuple contains the route name and path value.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteValueTransformer">
+            <summary>
+             Provides an abstraction for dynamically manipulating route value to select an OData controller action.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteValueTransformer.#ctor(Microsoft.AspNetCore.Mvc.Infrastructure.IActionSelector)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteValueTransformer"/> class.
+            </summary>
+            <param name="actionSelector">The injected <see cref="T:Microsoft.AspNetCore.Mvc.Infrastructure.IActionSelector"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteValueTransformer.TransformAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.RouteValueDictionary)">
+            <summary>
+            Creates a set of transformed route values that will be used to select an action.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="values">The route values associated with the current match.</param>
+            <returns>A task which asynchronously returns a set of route values.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.HttpRequestScope">
+            <summary>
+            Provides access to the <see cref="P:Microsoft.AspNetCore.OData.Routing.HttpRequestScope.HttpRequest"/>
+            to which the OData service container instance is scoped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.HttpRequestScope.HttpRequest">
+            <summary>
+            Provides access to the <see cref="P:Microsoft.AspNetCore.OData.Routing.HttpRequestScope.HttpRequest"/>
+            to which the OData service container instance is scoped.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataFeature">
+            <summary>
+            Contains the details of a given OData request. These properties should all be mutable.
+            None of these properties should ever be set to null.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataFeature.#ctor">
+            <summary>
+            Instantiates a new instance of the <see cref="T:Microsoft.AspNetCore.OData.Routing.ODataFeature"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.Path">
+            <summary>
+            Gets or sets the OData path.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.ActionDescriptor">
+            <summary>
+            Gets or sets the request container.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.IsEndpointRouting">
+            <summary>
+            Add a boolean value indicate whether it's endpoint routing or not.
+            Maybe it's unnecessary later.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.RoutePrefix">
+            <summary>
+            Gets or sets the route name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.RouteName">
+            <summary>
+            Gets or sets the route name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.RequestScope">
+            <summary>
+            Gets or sets the request scope.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.RequestContainer">
+            <summary>
+            Gets or sets the request container.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.NextLink">
+            <summary>
+            Gets or sets the next link for the OData response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.BatchRouteData">
+            <summary>
+            Gets or sets the batch route data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.DeltaLink">
+            <summary>
+            Gets or sets the delta link for the OData response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.UrlHelper">
+            <summary>
+            Gets or sets the Url helper.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.TotalCount">
+            <summary>
+            Gets or sets the total count for the OData response.
+            </summary>
+            <value><c>null</c> if no count should be sent back to the client.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.TotalCountFunc">
+            <summary>
+            Gets or sets the total count function for the OData response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.ApplyClause">
+            <summary>
+            Gets or sets the parsed OData <see cref="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.ApplyClause"/> of the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.SelectExpandClause">
+            <summary>
+            Gets or sets the parsed OData <see cref="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.SelectExpandClause"/> of the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.RoutingConventionsStore">
+            <summary>
+            Gets the data store used by <see cref="T:Microsoft.AspNetCore.OData.Routing.IODataRoutingConvention"/>s to store any custom route data.
+            </summary>
+            <value>Initially an empty <c>IDictionary&lt;string, object&gt;</c>.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.PageSize">
+            <summary>
+            Page size to be used by skiptoken implementation for the top-level resource for the request. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataFeature.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataFeature.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataOptions">
+            <summary>
+            Provides programmatic configuration for the OData service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataOptions.UrlKeyDelimiter">
+            <summary>
+            Gets or Sets the <see cref="T:Microsoft.OData.ODataUrlKeyDelimiter"/> to use while parsing, specifically
+            whether to recognize keys as segments or not in DefaultODataPathHandler.
+            </summary>
+            <remarks>Default value is unspecified (null).</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataOptions.NullDynamicPropertyIsEnabled">
+            <summary>
+            Gets or Sets a value indicating if value should be emitted for dynamic properties which are null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataOptions.EnableContinueOnErrorHeader">
+            <summary>
+            Gets or Sets a value indicating if batch requests should continue on error.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants">
+            <summary>
+            This class contains route constants for OData.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.ODataPath">
+            <summary>
+            Route variable name for the OData path.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.ODataPathTemplate">
+            <summary>
+            Wildcard route template for the OData path route variable.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.ConstraintName">
+            <summary>
+            Parameter name to use for the OData path route constraint.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.VersionConstraintName">
+            <summary>
+            Parameter name to use for the OData version route constraint.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.Action">
+            <summary>
+            Route data key for the action name.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.Controller">
+            <summary>
+            Route data key for the controller name.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.Key">
+            <summary>
+            Route data key for entity keys.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.RelatedKey">
+            <summary>
+            Route data key for the related key when deleting links.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.NavigationProperty">
+            <summary>
+            Route data key for the navigation property name when manipulating links.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.Batch">
+            <summary>
+            Route template suffix for OData batch.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.OData.Routing.ODataRouteConstants.DynamicProperty">
+            <summary>
+            Route data key for the dynamic property name when manipulating open type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.PerRouteContainer">
+            <summary>
+            A class for managing per-route service containers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.OData.Routing.PerRouteContainer"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.BuilderFactory">
+            <summary>
+            Gets or sets a function to build an <see cref="T:Microsoft.OData.IContainerBuilder"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.GetContainer(System.String)">
+            <summary>
+            Gets the container for a given route name.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <returns>The root container for the route name.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.SetContainer(System.String,System.IServiceProvider)">
+            <summary>
+            Sets the container for a given route name.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <param name="rootContainer">The root container to set.</param>
+            <remarks>Used by unit tests to insert root containers.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.AddRoute(System.String,System.String)">
+            <summary>
+            Add a routing mapping
+            </summary>
+            <param name="routeName">The route name</param>
+            <param name="routePrefix">The route prefix</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.GetRoutePrefix(System.String)">
+            <summary>
+            Get the route prefix
+            </summary>
+            <param name="routeName">The route name.</param>
+            <returns>The route prefix.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.CreateODataRootContainer(System.String,System.Action{Microsoft.OData.IContainerBuilder})">
+            <summary>
+            Create a root container for a given route name.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <param name="configureAction">The configuration actions to apply to the container.</param>
+            <returns>An instance of <see cref="T:System.IServiceProvider"/> to manage services for a route.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.CreateODataRootContainer(System.Action{Microsoft.OData.IContainerBuilder})">
+            <summary>
+            Create a root container not associated with a route.
+            </summary>
+            <param name="configureAction">The configuration actions to apply to the container.</param>
+            <returns>An instance of <see cref="T:System.IServiceProvider"/> to manage services for a route.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.HasODataRootContainer(System.String)">
+            <summary>
+            Check if the root container for a given route name exists.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <returns>true if root container for the route name exists, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.GetODataRootContainer(System.String)">
+            <summary>
+            Get the root container for a given route name.
+            </summary>
+            <param name="routeName">The route name.</param>
+            <returns>The root container for the route name.</returns>
+            <remarks>
+            This function will throw an exception if no container is found
+            in order to localize the failure and provide a consistent error
+            message. Use <see cref="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.HasODataRootContainer(System.String)"/> to test of a container
+            exists without throwing an exception.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.PerRouteContainer.CreateContainerBuilderWithCoreServices">
+            <summary>
+            Create a container builder with the default OData services.
+            </summary>
+            <returns>An instance of <see cref="T:Microsoft.OData.IContainerBuilder"/> to manage services.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.SRResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.SRResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.SRResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.SRResources.MissingNonODataContainer">
+            <summary>
+              Looks up a localized string similar to Cannot find the services container for the non-OData route. This can occur when using OData components on the non-OData route and is usually a configuration issue. Call EnableDependencyInjection() to enable OData components on non-OData routes. This may also occur when a request was mistakenly handled by the ASP.NET Core routing layer instead of the OData routing layer, for instance the URL does not include the OData route prefix configured via a call to MapODataServiceRoute()..
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.SRResources.MissingODataContainer">
+            <summary>
+              Looks up a localized string similar to Cannot find the services container for route &apos;{0}&apos;. This should not happen and represents a bug..
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.SRResources.MissingODataServices">
+            <summary>
+              Looks up a localized string similar to Cannot find &apos;{0}&apos;. The OData services have not been configured. Are you missing a call to AddOData()?.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.SRResources.NullContainer">
+            <summary>
+              Looks up a localized string similar to The container built by the container builder must not be null..
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.SRResources.RequestMustHaveModel">
+            <summary>
+              Looks up a localized string similar to The request must have an associated EDM model. Consider using the extension method HttpConfiguration.MapODataServiceRoute to register a route that parses the OData URI and attaches the model information..
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.CreatedODataResult`1">
+            <summary>
+            Represents an action result that is a response to a create operation that adds an entity to an entity set.
+            </summary>
+            <typeparam name="T">The entity type.</typeparam>
+            <remarks>This action result handles content negotiation and the HTTP prefer header. It generates a location
+            header containing the edit link of the created entity and, if response has status code: NoContent, also
+            generates an OData-EntityId header.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.CreatedODataResult`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.OData.Routing.CreatedODataResult`1"/> class.
+            </summary>
+            <param name="entity">The created entity.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.CreatedODataResult`1.Entity">
+            <summary>
+            Gets the entity that was created.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.CreatedODataResult`1.ExecuteResultAsync(Microsoft.AspNetCore.Mvc.ActionContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.UpdatedODataResult`1">
+            <summary>
+            Represents an action result that is a response to a PUT, PATCH, or a MERGE operation on an OData entity.
+            </summary>
+            <typeparam name="T">The entity type.</typeparam>
+            <remarks>This action result handles content negotiation and the HTTP prefer header.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.UpdatedODataResult`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.OData.Routing.UpdatedODataResult`1"/> class.
+            </summary>
+            <param name="entity">The updated entity.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.UpdatedODataResult`1.Entity">
+            <summary>
+            Gets the entity that was updated.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.UpdatedODataResult`1.ExecuteResultAsync(Microsoft.AspNetCore.Mvc.ActionContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataRoutingConventions">
+            <summary>
+            Provides helper methods for creating routing conventions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataRoutingConventions.CreateDefaultWithAttributeRouting(System.String,Microsoft.AspNetCore.Routing.IRouteBuilder)">
+            <summary>
+            Creates a mutable list of the default OData routing conventions with attribute routing enabled.
+            </summary>
+            <param name="routeName">The name of the route.</param>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Routing.IRouteBuilder"/> to add the route to.</param>
+            <returns>A mutable list of the default OData routing conventions.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataRoutingConventions.CreateDefaultWithAttributeRouting(System.String,System.IServiceProvider)">
+            <summary>
+            Creates a mutable list of the default OData routing conventions with attribute routing enabled.
+            For Endpoint routing, please use this version.
+            </summary>
+            <param name="routeName">The name of the route.</param>
+            <param name="serviceProvider">The service provider.</param>
+            <returns>A mutable list of the default OData routing conventions.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataRoutingConventions.CreateDefault">
+            <summary>
+            Creates a mutable list of the default OData routing conventions.
+            </summary>
+            <returns>A mutable list of the default OData routing conventions.</returns>
+        </member>
+    </members>
+</doc>
