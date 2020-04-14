@@ -2,8 +2,8 @@ OData Routing
  ============= 
  Component | Build  | Status 
 --------|--------- |---------
-Model Routing|Rolling | <img src="https://identitydivision.visualstudio.com/OData/_apis/build/status/OData.ModelBuilder/OData.ModelBuilder-Rolling?branchName=master"/> 
-Model Routing|Nightly | <img src="https://identitydivision.visualstudio.com/OData/_apis/build/status/OData.ModelBuilder/OData.ModelBuilder-Nightly?branchName=master"/> 
+Routing|Rolling | <img src="https://identitydivision.visualstudio.com/OData/_apis/build/status/OData.ModelBuilder/OData.ModelBuilder-Rolling?branchName=master"/> 
+Routing|Nightly | <img src="https://identitydivision.visualstudio.com/OData/_apis/build/status/OData.ModelBuilder/OData.ModelBuilder-Nightly?branchName=master"/> 
 
 ## 1. Introduction
 This is the official OData Routing repository.
