@@ -427,6 +427,62 @@
             <param name="routeName">The route name.</param>
             <returns></returns>
         </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointConventionBuilderExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointConventionBuilderExtensions.WithOData``1(``0,Microsoft.OData.Edm.IEdmModel)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TBuilder"></typeparam>
+            <param name="builder"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointMatcherPolicy">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointMatcherPolicy.Order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointMatcherPolicy.AppliesToEndpoints(System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Http.Endpoint})">
+            <summary>
+            
+            </summary>
+            <param name="endpoints"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointMatcherPolicy.ApplyAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.Matching.CandidateSet)">
+            <summary>
+            
+            </summary>
+            <param name="httpContext"></param>
+            <param name="candidates"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointMetadata">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataRoutingServiceCollectionExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataRoutingServiceCollectionExtensions.AddODataRouting(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.OData.Edm.IEdmModel)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions">
             <summary>
             Provides extension methods for <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add OData routes.
