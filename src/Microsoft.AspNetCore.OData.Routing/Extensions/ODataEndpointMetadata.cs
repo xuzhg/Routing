@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
     internal class ODataEndpointMetadata
     {
         public ODataEndpointMetadata(IEdmModel model) { }
-
+        /*
         public ODataEndpointMetadata(IDictionary<IEdmNamedElement, string> parameterMappings, Func<RouteValueDictionary, IDictionary<IEdmNamedElement, string>, ODataPath> odataPathFactory)
         {
             ParameterMappings = parameterMappings;
@@ -23,6 +23,17 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 
         public IDictionary<IEdmNamedElement, string> ParameterMappings { get; }
 
+
         public Func<RouteValueDictionary, IDictionary<IEdmNamedElement, string>, ODataPath> ODataPathFactory { get; }
+        */
+        public ODataEndpointMetadata(IDictionary<string, string> parameterMappings,
+            Func<RouteValueDictionary, IDictionary<string, string>, ODataPath> odataPathFactory)
+        {
+            ParameterMappings = parameterMappings;
+            ODataPathFactory = odataPathFactory;
+        }
+
+        public IDictionary<string, string> ParameterMappings { get; }
+        public Func<RouteValueDictionary, IDictionary<string, string>, ODataPath> ODataPathFactory { get; }
     }
 }

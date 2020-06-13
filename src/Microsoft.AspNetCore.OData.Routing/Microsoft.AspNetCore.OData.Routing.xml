@@ -326,6 +326,126 @@
             <returns>An <see cref="T:Microsoft.AspNetCore.OData.Routing.UpdatedODataResult`1"/> with the specified values.</returns>
             <remarks>These function uses types that are AspNetCore-specific.</remarks>
         </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.EntityRoutingConventionProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.EntityRoutingConventionProvider.Order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.EntityRoutingConventionProvider.CanApply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
+            <summary>
+            
+            </summary>
+            <param name="controller"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.EntityRoutingConventionProvider.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.EntityRoutingConventionProvider.Apply(System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="prefix"></param>
+            <param name="model"></param>
+            <param name="action"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.EntitySetRoutingConventionProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.EntitySetRoutingConventionProvider.Order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.EntitySetRoutingConventionProvider.CanApply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
+            <summary>
+            
+            </summary>
+            <param name="controller"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.EntitySetRoutingConventionProvider.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.EntitySetRoutingConventionProvider.Apply(System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="prefix"></param>
+            <param name="model"></param>
+            <param name="action"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.IODataRoutingConventionProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.IODataRoutingConventionProvider.Order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.IODataRoutingConventionProvider.CanApply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
+            <summary>
+            
+            </summary>
+            <param name="controller"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.IODataRoutingConventionProvider.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.IODataRoutingConventionProvider.Apply(System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="prefix"></param>
+            <param name="model"></param>
+            <param name="action"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.MetadataRoutingConventionProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.MetadataRoutingConventionProvider.Order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.MetadataRoutingConventionProvider.CanApply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
+            <summary>
+            
+            </summary>
+            <param name="controller"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.MetadataRoutingConventionProvider.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.MetadataRoutingConventionProvider.Apply(System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="prefix"></param>
+            <param name="model"></param>
+            <param name="action"></param>
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.DefaultContainerBuilder">
             <summary>
             The default container builder implementation based on the Microsoft dependency injection framework.
@@ -427,6 +547,44 @@
             <param name="routeName">The route name.</param>
             <returns></returns>
         </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataModelAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataModelAttribute.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="model"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Extensions.ODataModelAttribute.Model">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.MetadataApplicationModelConventionAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.MetadataApplicationModelConventionAttribute.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ApplicationModel)">
+            <summary>
+            
+            </summary>
+            <param name="application"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.MetadataActionModelConvention">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.MetadataActionModelConvention.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointConventionBuilderExtensions">
             <summary>
             
@@ -471,6 +629,31 @@
             
             </summary>
         </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointRoutingMatcherPolicy">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointRoutingMatcherPolicy.Order">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointRoutingMatcherPolicy.AppliesToEndpoints(System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Http.Endpoint})">
+            <summary>
+            
+            </summary>
+            <param name="endpoints"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataEndpointRoutingMatcherPolicy.ApplyAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.Matching.CandidateSet)">
+            <summary>
+            
+            </summary>
+            <param name="httpContext"></param>
+            <param name="candidates"></param>
+            <returns></returns>
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Extensions.ODataRoutingServiceCollectionExtensions">
             <summary>
             
@@ -481,6 +664,14 @@
             
             </summary>
             <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Extensions.ODataRoutingServiceCollectionExtensions.AddODataRouting(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.OData.Routing.ODataRoutingOptions})">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+            <param name="setupAction"></param>
             <returns></returns>
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.ODataEndpointRouteBuilderExtensions">
@@ -808,6 +999,43 @@
             <summary>
             Route data key for the dynamic property name when manipulating open type.
             </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.ODataRoutingOptions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataRoutingOptions.Models">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataRoutingOptions.Conventions">
+            <summary>
+            Routing conventions for all models???
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataRoutingOptions.AddModel(Microsoft.OData.Edm.IEdmModel)">
+            <summary>
+            
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataRoutingOptions.AddModel(System.String,Microsoft.OData.Edm.IEdmModel)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.ODataRoutingOptions.AddConvention(Microsoft.AspNetCore.OData.Routing.Conventions.IODataRoutingConventionProvider)">
+            <summary>
+            
+            </summary>
+            <param name="convention"></param>
+            <returns></returns>
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.PerRouteContainer">
             <summary>

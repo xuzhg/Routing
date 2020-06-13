@@ -23,28 +23,28 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 
         public void OnProvidersExecuting(ApplicationModelProviderContext context)
         {
-            foreach (var entitySet in _model.EntityContainer.EntitySets())
-            {
-                ControllerModel controller = context.Result.Controllers.FirstOrDefault(c => string.Equals(c.ControllerType.Name, $"{entitySet.Name}Controller", StringComparison.OrdinalIgnoreCase));
-                if (controller == null)
-                {
-                    continue;
-                }
+            //foreach (var entitySet in _model.EntityContainer.EntitySets())
+            //{
+            //    ControllerModel controller = context.Result.Controllers.FirstOrDefault(c => string.Equals(c.ControllerType.Name, $"{entitySet.Name}Controller", StringComparison.OrdinalIgnoreCase));
+            //    if (controller == null)
+            //    {
+            //        continue;
+            //    }
 
-                Console.WriteLine(controller.ControllerName);
+            //    Console.WriteLine(controller.ControllerName);
 
-                SelectorModel selectorModel = new SelectorModel();
-                var template = entitySet.Name + "{{**odatapath}}";
-                selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template) { Name = entitySet.Name });
-                controller.Selectors.Add(selectorModel);
+            //    SelectorModel selectorModel = new SelectorModel();
+            //    var template = entitySet.Name + "{{**odatapath}}";
+            //    selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template) { Name = entitySet.Name });
+            //    controller.Selectors.Add(selectorModel);
 
-                selectorModel.EndpointMetadata.Add(new ODataEndpointMetadata(null, null));
-                // Look at the actions in the controller and continue the "matching" process
-                //foreach (var action in controller.Actions)
-                //{
-                //}
+            //    selectorModel.EndpointMetadata.Add(new ODataEndpointMetadata(null, null));
+            //    // Look at the actions in the controller and continue the "matching" process
+            //    //foreach (var action in controller.Actions)
+            //    //{
+            //    //}
 
-            }
+            //}
 
             //    // throw new NotImplementedException();
             //    foreach (var controller in context.Result.Controllers)
