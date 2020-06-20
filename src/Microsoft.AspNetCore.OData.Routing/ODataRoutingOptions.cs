@@ -75,10 +75,10 @@ namespace Microsoft.AspNetCore.OData.Routing
         /// <param name="model"></param>
         /// <param name="configureAction"></param>
         /// <returns></returns>
-        public ODataRoutingConventions AddModel(string name, IEdmModel model, Action<IContainerBuilder> configureAction)
-        {
+        //public ODataRoutingConventions AddModel(string name, IEdmModel model, Action<IContainerBuilder> configureAction)
+        //{
 
-        }
+        //}
 
         /// <summary>
         /// 

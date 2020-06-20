@@ -12,34 +12,6 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
     /// <summary>
     /// 
     /// </summary>
-    public interface IODataControllerActionConvention
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        int Order { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="model"></param>
-        /// <param name="controller"></param>
-        /// <returns></returns>
-        bool AppliesToController(string prefix, IEdmModel model, ControllerModel controller);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="model"></param>
-        /// <param name="action"></param>
-        bool AppliesToAction(string prefix, IEdmModel model, ActionModel action);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public interface IODataControllerConvention
     {
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.OData.Routing.Template;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using System;
@@ -13,6 +14,13 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
     /// </summary>
     internal class ODataEndpointMetadata
     {
+        public ODataEndpointMetadata(string prefix, IEdmModel model, ODataPathTemplate template)
+        {
+            Prefix = prefix;
+            Model = model;
+            Template = template;
+        }
+
         public ODataEndpointMetadata(IEdmModel model) { }
         /*
         public ODataEndpointMetadata(IDictionary<IEdmNamedElement, string> parameterMappings, Func<RouteValueDictionary, IDictionary<IEdmNamedElement, string>, ODataPath> odataPathFactory)
@@ -35,5 +43,11 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 
         public IDictionary<string, string> ParameterMappings { get; }
         public Func<RouteValueDictionary, IDictionary<string, string>, ODataPath> ODataPathFactory { get; }
+
+        public string Prefix { get; }
+
+        public IEdmModel Model { get; }
+
+        public ODataPathTemplate Template { get; }
     }
 }

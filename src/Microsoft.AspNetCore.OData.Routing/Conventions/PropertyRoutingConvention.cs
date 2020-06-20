@@ -1,161 +1,270 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.OData.Routing.Extensions;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License.  See License.txt in the project root for license information.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.OData.Routing.Template;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.AspNetCore.OData.Routing.Conventions
 {
     /// <summary>
     /// 
     /// </summary>
-    public class PropertyConventionProvider : IODataActionConvention
+    public class PropertyEndpointConvention : IODataControllerActionConvention
     {
         /// <summary>
         /// 
         /// </summary>
-        public int Order => -1000 + 400;
+        public virtual int Order => 400;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="controller"></param>
-        public bool CanApply(ControllerModel controller)
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public virtual bool AppliesToController(ODataControllerActionContext context)
         {
-            if (controller.ControllerType != typeof(MetadataController).GetTypeInfo())
-            {
-                return false;
-            }
-
-            Console.WriteLine(controller.ControllerName);
-            return true;
+            // structural property supports for entity set and singleton
+            return context?.EntitySet != null || context?.Singleton != null;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="action"></param>
-        public void Apply(ActionModel action)
+        /// <param name="context"></param>
+        public virtual bool AppliesToAction(ODataControllerActionContext context)
         {
-            if (action.Controller.ControllerType != typeof(MetadataController).GetTypeInfo())
+            if (context == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(context));
             }
 
-            Console.WriteLine(action.Controller.ControllerName);
-        }
+            ActionModel action = context.Action;
 
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="model"></param>
-        /// <param name="action"></param>
-        public bool Apply(string prefix, IEdmModel model, ActionModel action)
-        {
-            if (model.EntityContainer == null)
+            if (context.EntitySet == null && context.Singleton == null)
             {
                 return false;
             }
-
-            string controllerName = action.Controller.ControllerName;
-            IEdmEntitySet entitySet = model.EntityContainer.FindEntitySet(controllerName);
-            if (entitySet == null)
-            {
-                return false;
-            }
-
-            if (action.Parameters.Count < 1)
-            {
-                return false;
-            }
-
-            var entityTypeName = entitySet.EntityType().Name;
-            var keys = entitySet.EntityType().Key().ToArray();
+            IEdmNavigationSource navigationSource = context.EntitySet == null ?
+                (IEdmNavigationSource)context.Singleton :
+                (IEdmNavigationSource)context.EntitySet;
 
             string actionName = action.ActionMethod.Name;
-            if ((actionName == "Get" ||
-                actionName == $"Get{entityTypeName}" ||
-                actionName == "Put" ||
-                actionName == $"Put{entityTypeName}" ||
-                actionName == "Patch" ||
-                actionName == $"Patch{entityTypeName}" ||
-                actionName == "Delete" ||
-                actionName == $"Delete{entityTypeName}") &&
-                keys.Length == action.Parameters.Count)
+
+            string method = Split(actionName, out string property, out string cast, out string declared);
+            if (method == null || string.IsNullOrEmpty(property))
             {
-                var mappings = new Dictionary<string, string>();
-                if (keys.Length == 1)
+                return false;
+            }
+
+            IEdmEntityType entityType = navigationSource.EntityType();
+            IEdmModel model = context.Model;
+            string prefix = context.Prefix;
+            IEdmEntityType declaredEntityType = null;
+            if (declared != null)
+            {
+                declaredEntityType = entityType.FindTypeInInheritance(model, declared) as IEdmEntityType;
+                if (declaredEntityType == null)
                 {
-                    mappings[keys[0].Name] = "key";
+                    return false;
+                }
 
-                    // support key in parenthesis
-                    string template = string.IsNullOrEmpty(prefix) ? $"{entitySet.Name}({{key}})" : $"{prefix}/{entitySet.Name}({{key}})";
-                    AddSelector(action, entitySet, template, mappings);
+                if (declaredEntityType == entityType)
+                {
+                    declaredEntityType = null;
+                }
+            }
 
-                    // support key as segment
-                    template = string.IsNullOrEmpty(prefix) ? $"{entitySet.Name}/{{key}}" : $"{prefix}/{entitySet.Name}/{{key}}";
-                    AddSelector(action, entitySet, template, mappings);
+            bool hasKeyParameter = HasKeyParameter(entityType, action);
+            IEdmSingleton singleton = navigationSource as IEdmSingleton;
+            if (singleton != null && hasKeyParameter)
+            {
+                // Singleton, doesn't allow to query property with key
+                return false;
+            }
+
+            if (singleton == null && !hasKeyParameter)
+            {
+                // in entityset, doesn't allow for non-key to query property
+                return false;
+            }
+
+            IEdmProperty edmProperty = entityType.FindProperty(property);
+            if (edmProperty != null && edmProperty.PropertyKind == EdmPropertyKind.Structural)
+            {
+                // only process structural property
+                IEdmStructuredType castComplexType = null;
+                if (cast != null)
+                {
+                    IEdmTypeReference propertyType = edmProperty.Type;
+                    if (propertyType.IsCollection())
+                    {
+                        propertyType = propertyType.AsCollection().ElementType();
+                    }
+                    if (!propertyType.IsComplex())
+                    {
+                        return false;
+                    }
+
+                    castComplexType = propertyType.ToStructuredType().FindTypeInInheritance(model, cast);
+                    if (castComplexType == null)
+                    {
+                        return false;
+                    }
+                }
+
+                IList<ODataSegmentTemplate> segments = new List<ODataSegmentTemplate>();
+
+                if (context.EntitySet != null)
+                {
+                    segments.Add(new EntitySetSegmentTemplate(context.EntitySet));
                 }
                 else
                 {
-
-                    foreach (var key in keys)
-                    {
-                        mappings[key.Name] = $"key{key.Name}";
-                    }
-
-                    var keyString = string.Join(",", mappings.Select(a => $"{a.Key}={a.Value}"));
-
-                    string template = string.IsNullOrEmpty(prefix) ? $"{entitySet.Name}({keyString})" : $"{prefix}/{entitySet.Name}({keyString})";
-                    AddSelector(action, entitySet, template, mappings);
+                    segments.Add(new SingletonSegmentTemplate(context.Singleton));
                 }
 
+                if (hasKeyParameter)
+                {
+                    segments.Add(new KeySegmentTemplate(entityType));
+                }
+                if (declaredEntityType != null && declaredEntityType != entityType)
+                {
+                    segments.Add(new CastSegmentTemplate(declaredEntityType));
+                }
+
+                segments.Add(new PropertySegmentTemplate((IEdmStructuralProperty)edmProperty));
+
+                ODataPathTemplate template = new ODataPathTemplate(segments);
+                action.AddSelector(prefix, model, template);
                 return true;
+            }
+            else
+            {
+                // map to a static action like:  <method>Property(int key, string property)From<...>
+                if (property == "Property" && cast == null)
+                {
+                    if (action.Parameters.Any(p => p.ParameterInfo.Name == "property" && p.ParameterType == typeof(string)))
+                    {
+                        // we find a static method mapping for all property
+                        // we find a action route
+                        IList<ODataSegmentTemplate> segments = new List<ODataSegmentTemplate>();
+
+                        if (context.EntitySet != null)
+                        {
+                            segments.Add(new EntitySetSegmentTemplate(context.EntitySet));
+                        }
+                        else
+                        {
+                            segments.Add(new SingletonSegmentTemplate(context.Singleton));
+                        }
+
+                        if (hasKeyParameter)
+                        {
+                            segments.Add(new KeySegmentTemplate(entityType));
+                        }
+                        if (declaredEntityType != null)
+                        {
+                            segments.Add(new CastSegmentTemplate(declaredEntityType));
+                        }
+
+                        segments.Add(new PropertySegmentTemplate((string)null/*entityType*/));
+
+                        ODataPathTemplate template = new ODataPathTemplate(segments);
+                        action.AddSelector(prefix, model, template);
+                        return true;
+                    }
+                }
             }
 
             return false;
         }
 
-        static void AddSelector(ActionModel action, IEdmEntitySet entitySet, string template, IDictionary<string, string> mappings)
+        private static bool HasKeyParameter(IEdmEntityType entityType, ActionModel action)
         {
-            SelectorModel selectorModel = new SelectorModel
+            var keys = entityType.Key().ToArray();
+            if (keys.Length == 1)
             {
-                AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template) { Name = template })
-            };
-            selectorModel.EndpointMetadata.Add(new ODataEndpointMetadata(mappings, (rvd, mapping) => new ODataPath(
-                new EntitySetSegment(entitySet),
-                new KeySegment(
-                    GetKeyValues(rvd, mapping, entitySet),
-                    entitySet.EntityType(),
-                    entitySet))));
-            action.Selectors.Add(selectorModel);
+                return action.Parameters.Any(p => p.ParameterInfo.Name == "key");
+            }
+            else
+            {
+                foreach (var key in keys)
+                {
+                    string keyName = $"key{key.Name}";
+                    if (!action.Parameters.Any(p => p.ParameterInfo.Name == keyName))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
 
-        static Dictionary<string, object> GetKeyValues(
-                RouteValueDictionary rvd,
-                IDictionary<string, string> mapping, IEdmEntitySet element)
+        private static string Split(string actionName, out string property, out string cast, out string declared)
         {
-            var key = element.EntityType().Key();
-            var result = new Dictionary<string, object>();
-            foreach (var component in key)
+            string method = null;
+            property = null;
+            cast = null;
+            declared = null;
+
+            string text;
+            // Get{PropertyName}Of<cast>From<declard>
+            if (actionName.StartsWith("Get", StringComparison.OrdinalIgnoreCase))
             {
-                var routeValueName = mapping[component.Name];
-                if (rvd.TryGetValue(routeValueName, out var value))
-                {
-                    result[component.Name] = value;
-                }
+                method = "Get";
+                text = actionName.Substring(3);
+            }
+            else if (actionName.StartsWith("PutTo", StringComparison.OrdinalIgnoreCase))
+            {
+                method = "PutTo";
+                text = actionName.Substring(5);
+            }
+            else if (actionName.StartsWith("PatchTo", StringComparison.OrdinalIgnoreCase))
+            {
+                method = "PatchTo";
+                text = actionName.Substring(7);
+            }
+            else if (actionName.StartsWith("DeleteTo", StringComparison.OrdinalIgnoreCase))
+            {
+                method = "DeleteTo";
+                text = actionName.Substring(8);
+            }
+            else
+            {
+                return null;
             }
 
-            return result;
+            int index = text.IndexOf("Of", StringComparison.OrdinalIgnoreCase);
+            if (index > 0)
+            {
+                property = text.Substring(0, index);
+                text = text.Substring(index + 2);
+                cast = Match(text, out declared);
+            }
+            else
+            {
+                property = Match(text, out declared);
+            }
+
+            return method;
+        }
+
+        private static string Match(string text, out string declared)
+        {
+            declared = null;
+            int index = text.IndexOf("From");
+            if (index > 0)
+            {
+                declared = text.Substring(index + 4);
+                return text.Substring(0, index);
+            }
+
+            return text;
         }
     }
 }
