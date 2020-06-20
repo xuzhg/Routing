@@ -11,7 +11,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
     /// <summary>
     /// 
     /// </summary>
-    public interface IODataRoutingConventionProvider
+    public interface IODataActionConvention
     {
         /// <summary>
         /// 

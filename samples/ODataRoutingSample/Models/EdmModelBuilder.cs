@@ -15,6 +15,9 @@ namespace ODataRoutingSample.Models
         {
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<Product>("Products");
+
+            builder.Action("ResetData");
+
             return builder.GetEdmModel();
         }
 
@@ -22,6 +25,11 @@ namespace ODataRoutingSample.Models
         {
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
+
+            var function = builder.Function("RateByOrder");
+            function.Parameter<int>("order");
+            function.Returns<int>();
+
             return builder.GetEdmModel();
         }
 
@@ -29,6 +37,11 @@ namespace ODataRoutingSample.Models
         {
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<Order>("Orders");
+
+            var function = builder.Function("RateByOrder");
+            function.Parameter<int>("order");
+            function.Returns<int>();
+
             return builder.GetEdmModel();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.OData.Routing.Conventions;
 using Microsoft.Extensions.Options;
 using Microsoft.OData.Edm;
 using System;
@@ -26,28 +27,67 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
         {
             var conventions = _options.Value.Conventions.OrderBy(c => c.Order);
-            var models = _options.Value.Models;
+            var routes = _options.Value.Models;
 
+            // Can apply on controller
             // for all conventions, 
-            foreach (var model in models)
+            foreach (var route in routes)
             {
+                IEdmModel model = route.Value;
+                if (model == null || model.EntityContainer == null)
+                {
+                    continue;
+                }
+
                 foreach (var controller in context.Result.Controllers)
                 {
-                    if (CanApply(model, controller))
+                    // apply to ODataModelAttribute
+                    if (!CanApply(route.Key, controller))
                     {
-                        foreach (var action in controller.Actions)
+                        continue;
+                    }
+
+                    // Add here
+                    //
+
+                    // Get conventions for all this controller
+
+                    foreach (var convention in conventions)
+                    {
+                        if (convention.AppliesToController(route.Key, route.Value, controller))
                         {
-                            foreach (var convention in conventions)
+                            foreach (var action in controller.Actions)
                             {
-                                if (convention.Apply(model.Key, model.Value, action))
+                                if (convention.AppliesToAction(route.Key, route.Value, action))
                                 {
-                                    break;
+                                    ;
                                 }
                             }
                         }
                     }
                 }
             }
+
+            // for all conventions, 
+            //foreach (var model in models)
+            //{
+            //    foreach (var controller in context.Result.Controllers)
+            //    {
+            //        if (CanApply(model.Key, controller))
+            //        {
+            //            foreach (var action in controller.Actions)
+            //            {
+            //                foreach (var convention in conventions)
+            //                {
+            //                    if (convention.Apply(model.Key, model.Value, action))
+            //                    {
+            //                        break;
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
             Console.WriteLine("OnProvidersExecuted");
         }
@@ -57,14 +97,44 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
             Console.WriteLine("OnProvidersExecuting");
         }
 
-        private static bool CanApply(KeyValuePair<string, IEdmModel> model, ControllerModel controller)
+        private static bool CanApply(string prefix, ControllerModel controller)
         {
             ODataModelAttribute odataModel = GetAttribute<ODataModelAttribute>(controller);
             if (odataModel == null)
             {
                 return true; // apply to all model
             }
-            else if (model.Key == odataModel.Model)
+            else if (prefix == odataModel.Model)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool CanApply(IEdmModel model, ControllerModel controllerModel)
+        {
+            if (model == null || model.EntityContainer == null)
+            {
+                return false;
+            }
+
+            string controllerName = controllerModel.ControllerName;
+
+            if (controllerName == "ODataOperationImport")
+            {
+                // Convention for the actionimport/function import
+                return true;
+            }
+
+            IEdmEntitySet entitySet = model.EntityContainer.FindEntitySet(controllerName);
+            if (entitySet != null)
+            {
+                return true;
+            }
+
+            IEdmSingleton singleton = model.EntityContainer.FindSingleton(controllerName);
+            if (singleton != null)
             {
                 return true;
             }

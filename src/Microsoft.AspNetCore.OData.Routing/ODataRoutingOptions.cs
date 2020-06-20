@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.OData.Routing.Conventions;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,19 @@ namespace Microsoft.AspNetCore.OData.Routing
         /// <summary>
         /// Routing conventions for all models???
         /// </summary>
-        public IList<IODataRoutingConventionProvider> Conventions { get; } = new List<IODataRoutingConventionProvider>
+        //public IList<IODataActionConvention> Conventions { get; } = new List<IODataActionConvention>
+        //{
+        //    new MetadataRoutingConventionProvider(),
+        //    new EntitySetRoutingConventionProvider(),
+        //    new EntityRoutingConventionProvider()
+        //};
+
+        public IList<IODataControllerActionConvention> Conventions { get; } = new List<IODataControllerActionConvention>
         {
-            new MetadataRoutingConventionProvider(),
-            new EntitySetRoutingConventionProvider(),
-            new EntityRoutingConventionProvider()
+            new MetadataRoutingConvention(),
+            new SingletonRoutingConvention(),
+         //   new EntitySetRoutingConvention(),
+            new OperationImportRoutingConvention()
         };
 
         /// <summary>
@@ -45,6 +54,11 @@ namespace Microsoft.AspNetCore.OData.Routing
         /// <returns></returns>
         public ODataRoutingOptions AddModel(string name, IEdmModel model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
             if (Models.ContainsKey(name))
             {
                 throw new Exception($"Contains the same name for the model: {name}");
@@ -57,9 +71,21 @@ namespace Microsoft.AspNetCore.OData.Routing
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="name"></param>
+        /// <param name="model"></param>
+        /// <param name="configureAction"></param>
+        /// <returns></returns>
+        public ODataRoutingConventions AddModel(string name, IEdmModel model, Action<IContainerBuilder> configureAction)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="convention"></param>
         /// <returns></returns>
-        public ODataRoutingOptions AddConvention(IODataRoutingConventionProvider convention)
+        public ODataRoutingOptions AddConvention(IODataControllerActionConvention convention)
         {
             Conventions.Add(convention);
             return null;

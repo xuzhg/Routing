@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
     /// <summary>
     /// 
     /// </summary>
-    public class EntitySetRoutingConventionProvider : IODataActionConvention
+    public class FunctionRoutingConventionProvider : IODataActionConvention
     {
         /// <summary>
         /// 

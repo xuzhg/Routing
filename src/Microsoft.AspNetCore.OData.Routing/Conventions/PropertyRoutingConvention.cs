@@ -15,12 +15,12 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
     /// <summary>
     /// 
     /// </summary>
-    public class EntityRoutingConventionProvider : IODataActionConvention
+    public class PropertyConventionProvider : IODataActionConvention
     {
         /// <summary>
         /// 
         /// </summary>
-        public int Order => -1000 + 100;
+        public int Order => -1000 + 400;
 
         /// <summary>
         /// 
@@ -50,6 +50,8 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
 
             Console.WriteLine(action.Controller.ControllerName);
         }
+
+
 
         /// <summary>
         /// 
