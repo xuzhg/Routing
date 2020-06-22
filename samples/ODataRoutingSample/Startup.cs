@@ -14,6 +14,7 @@ using ODataRoutingSample.Models;
 using Microsoft.OData.Edm;
 using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ODataRoutingSample
 {
@@ -37,8 +38,10 @@ namespace ODataRoutingSample
                 options.Conventions.Add(new MetadataActionModelConvention());
             });
 
-           // services.AddODataRouting();
-           // services.AddODataRouting(model);
+            // services.AddODataRouting();
+            // services.AddODataRouting(model);
+
+            services.AddConvention<MyConvention>();
 
             services.AddODataRouting(options => options
                 .AddModel(EdmModelBuilder.GetEdmModel())

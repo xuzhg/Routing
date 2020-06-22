@@ -12,27 +12,6 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
     /// <summary>
     /// 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ODataModelAttribute : Attribute
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        public ODataModelAttribute(string model)
-        {
-            Model = model;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Model { get; }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     [AttributeUsage(AttributeTargets.All)]
     public class MetadataApplicationModelConventionAttribute : Attribute, IApplicationModelConvention
     {

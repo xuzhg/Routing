@@ -12,13 +12,15 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 {
     internal class ODataRoutingApplicationModelProvider : IApplicationModelProvider
     {
-        //private readonly IEdmModel _model;
-
+        private readonly IODataControllerActionConvention[] _controllerActionConventions;
         private readonly IOptions<ODataRoutingOptions> _options;
 
         public ODataRoutingApplicationModelProvider(
+            IEnumerable<IODataControllerActionConvention> conventions,
             IOptions<ODataRoutingOptions> options)
         {
+            _controllerActionConventions = conventions.OrderBy(p => p.Order).ToArray();
+
             _options = options;
         }
 
@@ -26,7 +28,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
         {
-            var conventions = _options.Value.Conventions.OrderBy(c => c.Order);
+            //var conventions = _options.Value.Conventions.OrderBy(c => c.Order);
             var routes = _options.Value.Models;
 
             // Can apply on controller
@@ -41,6 +43,12 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 
                 foreach (var controller in context.Result.Controllers)
                 {
+                    // Skip the controller with [NonODataController] attribute decorated
+                    if (controller.HasAttribute<NonODataControllerAttribute>())
+                    {
+                        continue;
+                    }
+
                     // apply to ODataModelAttribute
                     if (!CanApply(route.Key, controller))
                     {
@@ -49,18 +57,25 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 
                     // Add here
                     //
-
+                    ODataControllerActionContext odataContext = BuildContext(route.Key, model, controller);
+                    odataContext.Controller = controller;
                     // Get conventions for all this controller
 
-                    foreach (var convention in conventions)
+                    // consider to replace the Linq with others?
+                    IODataControllerActionConvention[] newConventions =
+                        _controllerActionConventions.Where(c => c.AppliesToController(odataContext)).ToArray();
+
+                    if (newConventions.Length > 0)
                     {
-                        if (convention.AppliesToController(route.Key, route.Value, controller))
+                        foreach (var action in controller.Actions)
                         {
-                            foreach (var action in controller.Actions)
+                            odataContext.Action = action;
+
+                            foreach (var con in newConventions)
                             {
-                                if (convention.AppliesToAction(route.Key, route.Value, action))
+                                if (con.AppliesToAction(odataContext))
                                 {
-                                    ;
+                                    break;
                                 }
                             }
                         }
@@ -68,28 +83,28 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
                 }
             }
 
-            // for all conventions, 
-            //foreach (var model in models)
-            //{
-            //    foreach (var controller in context.Result.Controllers)
-            //    {
-            //        if (CanApply(model.Key, controller))
-            //        {
-            //            foreach (var action in controller.Actions)
-            //            {
-            //                foreach (var convention in conventions)
-            //                {
-            //                    if (convention.Apply(model.Key, model.Value, action))
-            //                    {
-            //                        break;
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
             Console.WriteLine("OnProvidersExecuted");
+        }
+
+        private static ODataControllerActionContext BuildContext(string prefix, IEdmModel model, ControllerModel controller)
+        {
+            // The reason why it's better to create a context is that:
+            // We don't need to call te FindEntitySet or FindSingleton in every convention
+            string controllerName = controller.ControllerName;
+
+            IEdmEntitySet entitySet = model.EntityContainer.FindEntitySet(controllerName);
+            if (entitySet != null)
+            {
+                return new ODataControllerActionContext(prefix, model, entitySet);
+            }
+
+            IEdmSingleton singleton = model.EntityContainer.FindSingleton(controllerName);
+            if (singleton != null)
+            {
+                return new ODataControllerActionContext(prefix, model, singleton);
+            }
+
+            return new ODataControllerActionContext(prefix, model);
         }
 
         public void OnProvidersExecuting(ApplicationModelProviderContext context)
@@ -99,7 +114,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
 
         private static bool CanApply(string prefix, ControllerModel controller)
         {
-            ODataModelAttribute odataModel = GetAttribute<ODataModelAttribute>(controller);
+            ODataModelAttribute odataModel = controller.GetAttribute<ODataModelAttribute>();
             if (odataModel == null)
             {
                 return true; // apply to all model
@@ -140,17 +155,6 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
             }
 
             return false;
-        }
-
-        public static T GetAttribute<T>(ControllerModel controller)
-        {
-            if (controller == null)
-            {
-                throw new ArgumentNullException(nameof(controller));
-            }
-
-            T value = controller.Attributes.OfType<T>().FirstOrDefault();
-            return value;
         }
     }
 }

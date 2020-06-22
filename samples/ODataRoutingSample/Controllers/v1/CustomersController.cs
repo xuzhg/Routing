@@ -5,23 +5,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Routing;
 using ODataRoutingSample.Models;
 
-namespace ODataRoutingSample.Controllers
+namespace ODataRoutingSample.Controllers.v1
 {
-    public class ODataOperationImportController : ControllerBase
+    [ODataModel("v1")]
+    public class CustomersController : ControllerBase
     {
-        [HttpPost]
-        public IEnumerable<Product> ResetData()
+        [HttpGet]
+        public IEnumerable<Customer> Get()
         {
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new Product
+            return Enumerable.Range(1, 5).Select(index => new Customer
             {
                 Id = index,
-                Category = "Category + " + index
+                Name = "Name + " + index
             })
             .ToArray();
         }
     }
 }
-

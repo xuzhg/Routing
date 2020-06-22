@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.OData.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{F588EBAE-1921-440D-A1E8-89E9F8BC45CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataRoutingSample", "samples\ODataRoutingSample\ODataRoutingSample.csproj", "{7B8A1FB6-B80A-458B-8A55-43906566437E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODataRoutingSample", "samples\ODataRoutingSample\ODataRoutingSample.csproj", "{7B8A1FB6-B80A-458B-8A55-43906566437E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

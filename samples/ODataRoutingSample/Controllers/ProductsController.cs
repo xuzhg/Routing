@@ -9,10 +9,10 @@ using ODataRoutingSample.Models;
 
 namespace ODataRoutingSample.Controllers
 {
-    public class ODataOperationImportController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        [HttpPost]
-        public IEnumerable<Product> ResetData()
+        [HttpGet]
+        public IEnumerable<Product> Get()
         {
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new Product
@@ -24,4 +24,3 @@ namespace ODataRoutingSample.Controllers
         }
     }
 }
-

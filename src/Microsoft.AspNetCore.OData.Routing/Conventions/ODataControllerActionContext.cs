@@ -63,5 +63,10 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// 
         /// </summary>
         public ActionModel Action { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsDone { get; }
     }
 }

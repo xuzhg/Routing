@@ -1,81 +1,54 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.OData.Routing.Extensions;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License.  See License.txt in the project root for license information.
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.OData.Routing.Template;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.AspNetCore.OData.Routing.Conventions
 {
     /// <summary>
     /// 
     /// </summary>
-    public class EntityRoutingConventionProvider : IODataActionConvention
+    public class EntityEndpointConvention : IODataControllerActionConvention
     {
         /// <summary>
         /// 
         /// </summary>
-        public int Order => -1000 + 100;
+        public int Order => 300;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="controller"></param>
-        public bool CanApply(ControllerModel controller)
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public virtual bool AppliesToController(ODataControllerActionContext context)
         {
-            if (controller.ControllerType != typeof(MetadataController).GetTypeInfo())
-            {
-                return false;
-            }
-
-            Console.WriteLine(controller.ControllerName);
-            return true;
+            return context?.EntitySet != null;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="action"></param>
-        public void Apply(ActionModel action)
+        /// <param name="context"></param>
+        public virtual bool AppliesToAction(ODataControllerActionContext context)
         {
-            if (action.Controller.ControllerType != typeof(MetadataController).GetTypeInfo())
+            if (context == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(context));
             }
 
-            Console.WriteLine(action.Controller.ControllerName);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="model"></param>
-        /// <param name="action"></param>
-        public bool Apply(string prefix, IEdmModel model, ActionModel action)
-        {
-            if (model.EntityContainer == null)
+            ActionModel action = context.Action;
+            if (context.EntitySet == null || action.Parameters.Count < 1)
             {
+                // At lease one parameter for the key.
                 return false;
             }
 
-            string controllerName = action.Controller.ControllerName;
-            IEdmEntitySet entitySet = model.EntityContainer.FindEntitySet(controllerName);
-            if (entitySet == null)
-            {
-                return false;
-            }
-
-            if (action.Parameters.Count < 1)
-            {
-                return false;
-            }
-
+            IEdmEntitySet entitySet = context.EntitySet;
+            var entityType = entitySet.EntityType();
             var entityTypeName = entitySet.EntityType().Name;
             var keys = entitySet.EntityType().Key().ToArray();
 
@@ -90,70 +63,22 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
                 actionName == $"Delete{entityTypeName}") &&
                 keys.Length == action.Parameters.Count)
             {
-                var mappings = new Dictionary<string, string>();
-                if (keys.Length == 1)
-                {
-                    mappings[keys[0].Name] = "key";
+                ODataPathTemplate template = new ODataPathTemplate(
+                    new EntitySetSegmentTemplate(entitySet),
+                    new KeySegmentTemplate(entityType)
+                    );
 
-                    // support key in parenthesis
-                    string template = string.IsNullOrEmpty(prefix) ? $"{entitySet.Name}({{key}})" : $"{prefix}/{entitySet.Name}({{key}})";
-                    AddSelector(action, entitySet, template, mappings);
+                // support key in parenthesis
+                action.AddSelector(context.Prefix, context.Model, template);
 
-                    // support key as segment
-                    template = string.IsNullOrEmpty(prefix) ? $"{entitySet.Name}/{{key}}" : $"{prefix}/{entitySet.Name}/{{key}}";
-                    AddSelector(action, entitySet, template, mappings);
-                }
-                else
-                {
-
-                    foreach (var key in keys)
-                    {
-                        mappings[key.Name] = $"key{key.Name}";
-                    }
-
-                    var keyString = string.Join(",", mappings.Select(a => $"{a.Key}={a.Value}"));
-
-                    string template = string.IsNullOrEmpty(prefix) ? $"{entitySet.Name}({keyString})" : $"{prefix}/{entitySet.Name}({keyString})";
-                    AddSelector(action, entitySet, template, mappings);
-                }
-
+                // support key as segment
+                ODataPathTemplate newTemplate = template.Clone();
+                newTemplate.KeyAsSegment = true;
+                action.AddSelector(context.Prefix, context.Model, newTemplate);
                 return true;
             }
 
             return false;
-        }
-
-        static void AddSelector(ActionModel action, IEdmEntitySet entitySet, string template, IDictionary<string, string> mappings)
-        {
-            SelectorModel selectorModel = new SelectorModel
-            {
-                AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template) { Name = template })
-            };
-            selectorModel.EndpointMetadata.Add(new ODataEndpointMetadata(mappings, (rvd, mapping) => new ODataPath(
-                new EntitySetSegment(entitySet),
-                new KeySegment(
-                    GetKeyValues(rvd, mapping, entitySet),
-                    entitySet.EntityType(),
-                    entitySet))));
-            action.Selectors.Add(selectorModel);
-        }
-
-        static Dictionary<string, object> GetKeyValues(
-                RouteValueDictionary rvd,
-                IDictionary<string, string> mapping, IEdmEntitySet element)
-        {
-            var key = element.EntityType().Key();
-            var result = new Dictionary<string, object>();
-            foreach (var component in key)
-            {
-                var routeValueName = mapping[component.Name];
-                if (rvd.TryGetValue(routeValueName, out var value))
-                {
-                    result[component.Name] = value;
-                }
-            }
-
-            return result;
         }
     }
 }

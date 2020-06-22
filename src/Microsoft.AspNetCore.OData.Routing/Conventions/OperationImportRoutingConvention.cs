@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.OData.Routing.Extensions;
+using Microsoft.AspNetCore.OData.Routing.Template;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -21,7 +22,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// <summary>
         /// 
         /// </summary>
-        public int Order => -1000 + 100;
+        public int Order => 700;
 
         /// <summary>
         /// used for cache
@@ -31,47 +32,31 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="model"></param>
-        /// <param name="controller"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        public bool AppliesToController(string prefix, IEdmModel model, ControllerModel controller)
+        public bool AppliesToController(ODataControllerActionContext context)
         {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            if (controller == null)
-            {
-                throw new ArgumentNullException(nameof(controller));
-            }
-
-            if (model.EntityContainer == null)
-            {
-                return false;
-            }
-
-            return controller.ControllerName == "ODataOperationImport";
+            return context?.Controller?.ControllerName == "ODataOperationImport";
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="model"></param>
-        /// <param name="action"></param>
-        public bool AppliesToAction(string prefix, IEdmModel model, ActionModel action)
+        /// <param name="context"></param>
+        public bool AppliesToAction(ODataControllerActionContext context)
         {
-            if (model == null)
+            if (context == null)
             {
-                throw new ArgumentNullException(nameof(model));
+                throw new ArgumentNullException(nameof(context));
             }
 
-            if (action == null)
+            ActionModel action = context.Action;
+            if (action.Controller.ControllerName != "ODataOperationImport")
             {
-                throw new ArgumentNullException(nameof(action));
+                return false;
             }
+
+            IEdmModel model = context.Model;
 
             // By convention, we use the operation name as the action name in the controller
             string actionMethodName = action.ActionMethod.Name;
@@ -84,77 +69,20 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
 
                 if (edmOperationImport.IsActionImport())
                 {
-                    IEdmActionImport actionImport = (IEdmActionImport)edmOperationImport;
-
-                    var template = string.IsNullOrEmpty(prefix) ? edmOperationImport.Name : $"{prefix}/{edmOperationImport.Name}";
-
-                    SelectorModel selectorModel = action.Selectors.FirstOrDefault(s => s.AttributeRouteModel == null);
-                    if (selectorModel == null)
-                    {
-                        selectorModel = new SelectorModel();
-                        action.Selectors.Add(selectorModel);
-                    }
-
-                    selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template) { Name = template });
-                    selectorModel.EndpointMetadata.Add(new ODataEndpointMetadata(null,
-                        (_, __) => new ODataPath(new OperationImportSegment(edmOperationImport, targetSet))));
+                    ODataPathTemplate template = new ODataPathTemplate(new ActionImportSegmentTemplate((IEdmActionImport)edmOperationImport));
+                    action.AddSelector(context.Prefix, context.Model, template);
                 }
                 else
                 {
-                    //IEdmFunctionImport functionImport = (IEdmFunctionImport)edmOperationImport;
-                    //IDictionary<string, string> parameterMappings = ConstructFunctionParameters(functionImport);
-                    //string parameterTemplate = string.Join(",", parameterMappings.Select(p => $"{p.Key}={p.Value}"));
-                    //string template =  string.IsNullOrEmpty(prefix) ? $"{functionImport.Name}({parameterTemplate})" : $"{prefix}/{functionImport.Name}({parameterTemplate})";
-
-                    //SelectorModel selectorModel = action.Selectors.FirstOrDefault(s => s.AttributeRouteModel == null);
-                    //if (selectorModel == null)
-                    //{
-                    //    selectorModel = new SelectorModel();
-                    //    action.Selectors.Add(selectorModel);
-                    //}
-
-                    //selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template) { Name = template });
-                    //selectorModel.EndpointMetadata.Add(new ODataEndpointMetadata(null,
-                    //    (_, __) => new ODataPath(new OperationImportSegment(edmOperationImport, targetSet))));
-
-                    string template = string.IsNullOrEmpty(prefix) ? "{functionimport}" : $"{prefix}/{{functionimport}}";
-
-                    SelectorModel selectorModel = action.Selectors.FirstOrDefault(s => s.AttributeRouteModel == null);
-                    if (selectorModel == null)
-                    {
-                        selectorModel = new SelectorModel();
-                        action.Selectors.Add(selectorModel);
-                    }
-
-                    selectorModel.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template) { Name = template });
-                    selectorModel.EndpointMetadata.Add(new ODataEndpointMetadata(null,
-                        (_, __) => new ODataPath(new OperationImportSegment(edmOperationImport, targetSet))));
+                    IEdmFunctionImport functionImport = (IEdmFunctionImport)edmOperationImport;
+                    ODataPathTemplate template = new ODataPathTemplate(new FunctionImportSegmentTemplate(functionImport));
+                    action.AddSelector(context.Prefix, context.Model, template);
                 }
             }
 
             // in OData operationImport routing convention, all action are processed by default
             // even it's not a really edm operation import call.
             return true;
-        }
-
-        private static IDictionary<string, string> ConstructFunctionParameters(IEdmFunctionImport functionImport)
-        {
-            IEdmFunction function = functionImport.Function;
-
-            int skip = 0;
-            if (function.IsBound)
-            {
-                // Function import should not be a bound, here for safety. Need Double confirm with 
-                skip = 1;
-            }
-
-            IDictionary<string, string> parameterMappings = new Dictionary<string, string>();
-            foreach (var parameter in function.Parameters.Skip(skip))
-            {
-                parameterMappings[parameter.Name] = $"{{{parameter.Name}}}";
-            }
-
-            return parameterMappings;
         }
     }
 }

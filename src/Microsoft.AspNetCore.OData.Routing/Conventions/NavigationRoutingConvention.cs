@@ -13,12 +13,12 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
     /// <summary>
     /// 
     /// </summary>
-    public class PropertyRoutingConvention : IODataControllerActionConvention
+    public class NavigationRoutingConvention : IODataControllerActionConvention
     {
         /// <summary>
         /// 
         /// </summary>
-        public virtual int Order => 400;
+        public virtual int Order => 500;
 
         /// <summary>
         /// 

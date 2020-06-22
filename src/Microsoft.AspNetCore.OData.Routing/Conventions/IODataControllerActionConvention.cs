@@ -20,6 +20,13 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// <returns></returns>
         bool AppliesToController(ODataControllerActionContext context);
 
+        /*
+        /// <summary>
+        /// Maybe to seperate the query and apply into two parts?
+        /// </summary>
+        void Apply(...)
+        */
+
         /// <summary>
         /// 
         /// </summary>

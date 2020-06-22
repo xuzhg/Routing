@@ -25,6 +25,7 @@ namespace ODataRoutingSample.Models
         {
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
+            builder.Singleton<Customer>("Me");
 
             var function = builder.Function("RateByOrder");
             function.Parameter<int>("order");
@@ -38,7 +39,19 @@ namespace ODataRoutingSample.Models
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<Order>("Orders");
 
+            builder.Singleton<Order>("VipOrder");
+
+            var functionWithComplexTypeParameter = builder.EntityType<Order>().Function("CanMoveToAddress").Returns<bool>();
+            functionWithComplexTypeParameter.Parameter<Address>("address");
+
+            // Function 1
             var function = builder.Function("RateByOrder");
+            function.Parameter<int>("order");
+            function.Returns<int>();
+
+            // Function 2
+            function = builder.Function("CalcByOrder");
+            function.Parameter<string>("name");
             function.Parameter<int>("order");
             function.Returns<int>();
 

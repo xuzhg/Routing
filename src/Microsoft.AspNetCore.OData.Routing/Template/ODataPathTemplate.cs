@@ -56,7 +56,20 @@ namespace Microsoft.AspNetCore.OData.Routing.Template
         /// <summary>
         /// 
         /// </summary>
-        public bool KeyAsSegment { get; }
+        public bool KeyAsSegment { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ODataPathTemplate Clone()
+        {
+            IList<ODataSegmentTemplate> newSegmes = new List<ODataSegmentTemplate>(Segments);
+            return new ODataPathTemplate(newSegmes)
+            {
+                KeyAsSegment = this.KeyAsSegment
+            };
+        }
 
         /// <summary>
         /// 

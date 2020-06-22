@@ -22,6 +22,22 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// <typeparam name="T"></typeparam>
         /// <param name="controller"></param>
         /// <returns></returns>
+        public static bool HasAttribute<T>(this ControllerModel controller)
+        {
+            if (controller == null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
+
+            return controller.Attributes.Any(a => a is T);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="controller"></param>
+        /// <returns></returns>
         public static T GetAttribute<T>(this ControllerModel controller)
         {
             if (controller == null)
