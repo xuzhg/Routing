@@ -80,13 +80,15 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
                 throw new ArgumentNullException(nameof(services));
             }
 
-            services.AddSingleton<IPerRouteContainer, PerRouteContainer>();
+            services.AddSingleton<IPerRouteContainer, PerRouteContainer>(); // it seems we don't need this?
 
             services.TryAddEnumerable(
                 ServiceDescriptor.Transient<IConfigureOptions<ODataRoutingOptions>, ODataRoutingOptionsSetup>());
 
             services.TryAddEnumerable(
                 ServiceDescriptor.Transient<IApplicationModelProvider, ODataRoutingApplicationModelProvider>());
+
+            // for debug only
             services.TryAddEnumerable(
                 ServiceDescriptor.Transient<IApplicationModelProvider, ODataEndpointModelDebugProvider>());
 
@@ -129,20 +131,29 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
             services.TryAddEnumerable(
                 ServiceDescriptor.Transient<IODataControllerActionConvention, RefRoutingConvention>());
 
-
-            services.TryAddEnumerable(
-                ServiceDescriptor.Transient<IODataControllerActionConvention, MyConvention>());
+            //services.TryAddEnumerable(
+            //    ServiceDescriptor.Transient<IODataControllerActionConvention, MyConvention>());
         }
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public class MyConvention : EntitySetEndpointConvention
+    public class MyConvention : IODataControllerActionConvention
     {
         /// <summary>
         /// 
         /// </summary>
-        public override int Order => base.Order - 10;
+        public int Order => -100;
+
+        public bool AppliesToAction(ODataControllerActionContext context)
+        {
+            return true; // apply to all controller
+        }
+
+        public bool AppliesToController(ODataControllerActionContext context)
+        {
+            return false; // continue for all others
+        }
     }
 }

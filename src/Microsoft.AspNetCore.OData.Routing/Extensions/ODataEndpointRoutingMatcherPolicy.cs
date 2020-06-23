@@ -76,7 +76,25 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
                     newValues.Add(key, value);
                 }
 
-                candidates.ReplaceEndpoint(i, newEndpoint, newValues);
+                var oPath = oDataMetadata.GenerateODataPath(originalValues, httpContext.Request.QueryString);
+                if (oPath != null)
+                {
+                    var odata = httpContext.Request.ODataFeature();
+                    odata.Model = oDataMetadata.Model;
+                    odata.IsEndpointRouting = true;
+                    odata.RequestContainer = httpContext.RequestServices; // sp;
+                    odata.Path = oPath;
+
+                    //candidates.SetValidity(i, true); // Double confirm whether it's required or not?
+                    continue;
+                }
+                else
+                {
+                    candidates.SetValidity(i, false);
+                    continue;
+                }
+
+                //candidates.ReplaceEndpoint(i, newEndpoint, newValues);
 
                 Task EndpointWithODataPath(HttpContext httpContext)
                 {

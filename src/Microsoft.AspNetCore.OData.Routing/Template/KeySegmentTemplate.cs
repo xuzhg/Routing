@@ -4,7 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.AspNetCore.OData.Routing.Template
 {
@@ -64,5 +68,34 @@ namespace Microsoft.AspNetCore.OData.Routing.Template
         /// 
         /// </summary>
         public IEdmEntityType EntityType { get; }
+
+        /// <inheritdoc />
+        public override ODataPathSegment GenerateODataSegment(IEdmModel model, IEdmNavigationSource previous,
+            RouteValueDictionary routeValue, QueryString queryString)
+        {
+            IDictionary<string, object> keysValues = new Dictionary<string, object>();
+            foreach (var key in _keyMappings)
+            {
+                string keyName = key.Key;
+                string templateName = key.Value.Item1;
+                IEdmTypeReference edmType = key.Value.Item2;
+                if (routeValue.TryGetValue(templateName, out object rawValue))
+                {
+                    string strValue = rawValue as string;
+                    object newValue = ODataUriUtils.ConvertFromUriLiteral(strValue, ODataVersion.V4, model, edmType);
+
+                    // for without FromODataUri, so update it, for example, remove the single quote for string value.
+                    routeValue[templateName] = newValue;
+
+                    // For FromODataUri
+                    string prefixName = ODataParameterValue.ParameterValuePrefix + templateName;
+                    routeValue[prefixName] = new ODataParameterValue(newValue, edmType);
+
+                    keysValues[keyName] = newValue;
+                }
+            }
+
+            return new KeySegment(keysValues, EntityType, previous);
+        }
     }
 }

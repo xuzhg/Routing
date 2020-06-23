@@ -1,18 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License.  See License.txt in the project root for license information.
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.OData.Routing.Extensions;
 using ODataRoutingSample.Models;
 using Microsoft.OData.Edm;
-using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -32,10 +28,10 @@ namespace ODataRoutingSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options =>
-            {
-                options.Conventions.Add(new MetadataApplicationModelConventionAttribute());
-                options.Conventions.Add(new MetadataActionModelConvention());
+            services.AddControllers(options => {
+            //{
+            //    options.Conventions.Add(new MetadataApplicationModelConventionAttribute());
+            //    options.Conventions.Add(new MetadataActionModelConvention());
             });
 
             // services.AddODataRouting();
@@ -71,7 +67,7 @@ namespace ODataRoutingSample
                 return next(context);
             });
 
-            app.UseAuthorization();
+        //    app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License.  See License.txt in the project root for license information.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
 using Microsoft.Extensions.Options;
 using Microsoft.OData.Edm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.OData.Routing.Extensions
 {
@@ -32,7 +33,6 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
             var routes = _options.Value.Models;
 
             // Can apply on controller
-            // for all conventions, 
             foreach (var route in routes)
             {
                 IEdmModel model = route.Value;
@@ -44,12 +44,13 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
                 foreach (var controller in context.Result.Controllers)
                 {
                     // Skip the controller with [NonODataController] attribute decorated
+                    // Maybe we don't need this attribute.
                     if (controller.HasAttribute<NonODataControllerAttribute>())
                     {
                         continue;
                     }
 
-                    // apply to ODataModelAttribute
+                    // Apply to ODataModelAttribute
                     if (!CanApply(route.Key, controller))
                     {
                         continue;
@@ -59,7 +60,6 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
                     //
                     ODataControllerActionContext odataContext = BuildContext(route.Key, model, controller);
                     odataContext.Controller = controller;
-                    // Get conventions for all this controller
 
                     // consider to replace the Linq with others?
                     IODataControllerActionConvention[] newConventions =
@@ -120,36 +120,6 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
                 return true; // apply to all model
             }
             else if (prefix == odataModel.Model)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool CanApply(IEdmModel model, ControllerModel controllerModel)
-        {
-            if (model == null || model.EntityContainer == null)
-            {
-                return false;
-            }
-
-            string controllerName = controllerModel.ControllerName;
-
-            if (controllerName == "ODataOperationImport")
-            {
-                // Convention for the actionimport/function import
-                return true;
-            }
-
-            IEdmEntitySet entitySet = model.EntityContainer.FindEntitySet(controllerName);
-            if (entitySet != null)
-            {
-                return true;
-            }
-
-            IEdmSingleton singleton = model.EntityContainer.FindSingleton(controllerName);
-            if (singleton != null)
             {
                 return true;
             }

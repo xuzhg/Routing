@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
-using System;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.AspNetCore.OData.Routing.Template
 {
@@ -14,18 +16,27 @@ namespace Microsoft.AspNetCore.OData.Routing.Template
         /// <summary>
         /// 
         /// </summary>
-        public static RefSegmentTemplate Instance { get; } = new RefSegmentTemplate();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private RefSegmentTemplate()
+        public RefSegmentTemplate(IEdmNavigationProperty navigation)
         {
+            Navigation = navigation;
         }
 
         /// <summary>
         /// 
         /// </summary>
         public override string Template => "$ref";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEdmNavigationProperty Navigation { get; }
+
+        /// <inheritdoc />
+        public override ODataPathSegment GenerateODataSegment(IEdmModel model,
+            IEdmNavigationSource previous, RouteValueDictionary routeValue, QueryString queryString)
+        {
+            // ODL implementation is complex, here i just use the NavigationPropertyLinkSegment
+            return new NavigationPropertyLinkSegment(Navigation, previous);
+        }
     }
 }

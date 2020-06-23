@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.OData.Routing.Template;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OData.Routing.Template;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -49,5 +50,16 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
         public IEdmModel Model { get; }
 
         public ODataPathTemplate Template { get; }
+
+        // { { "$filter", "IntProp eq @p1" }, { "@p1", "@p2" }, { "@p2", "123" } });
+        public ODataPath GenerateODataPath(RouteValueDictionary values, QueryString queryString)
+        {
+            if (Template != null)
+            {
+                return Template.GenerateODataPath(Model, values, queryString);
+            }
+
+            return null;
+        }
     }
 }

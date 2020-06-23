@@ -9,6 +9,11 @@
             Provide the interface for the details of a given OData request.
             </summary>
         </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.Model">
+            <summary>
+            Gets or sets the OData path.
+            </summary>
+        </member>
         <member name="P:Microsoft.AspNetCore.OData.Routing.IODataFeature.Path">
             <summary>
             Gets or sets the OData path.
@@ -1191,6 +1196,11 @@
             Instantiates a new instance of the <see cref="T:Microsoft.AspNetCore.OData.Routing.ODataFeature"/> class.
             </summary>
         </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.Model">
+            <summary>
+            Gets or sets the OData path.
+            </summary>
+        </member>
         <member name="P:Microsoft.AspNetCore.OData.Routing.ODataFeature.Path">
             <summary>
             Gets or sets the OData path.
@@ -1644,6 +1654,9 @@
             
             </summary>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.ActionImportSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.ActionSegmentTemplate">
             <summary>
             Represents a template that could match an <see cref="T:Microsoft.AspNetCore.OData.Routing.Template.ODataSegmentTemplate"/>.
@@ -1672,6 +1685,9 @@
             
             </summary>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.ActionSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.CastSegmentTemplate">
             <summary>
             Represents a template that could match an <see cref="T:Microsoft.AspNetCore.OData.Routing.Template.ODataSegmentTemplate"/>.
@@ -1693,6 +1709,9 @@
             
             </summary>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.CastSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.CountSegmentTemplate">
             <summary>
             Represents a template that could match a $count segment.
@@ -1712,6 +1731,9 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.CountSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.EntitySetSegmentTemplate">
             <summary>
@@ -1734,6 +1756,9 @@
             
             </summary>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.EntitySetSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.FunctionImportSegmentTemplate">
             <summary>
             Represents a template that could match an <see cref="T:Microsoft.AspNetCore.OData.Routing.Template.ODataSegmentTemplate"/>.
@@ -1754,6 +1779,9 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.FunctionImportSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.FunctionSegmentTemplate">
             <summary>
@@ -1782,6 +1810,9 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.FunctionSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.KeySegmentTemplate">
             <summary>
@@ -1818,6 +1849,9 @@
             
             </summary>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.KeySegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.MetadataSegmentTemplate">
             <summary>
             Represents a template that could match an <see cref="T:Microsoft.AspNetCore.OData.Routing.Template.ODataSegmentTemplate"/>.
@@ -1837,6 +1871,9 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.MetadataSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.NavigationSegmentTemplate">
             <summary>
@@ -1858,6 +1895,9 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.NavigationSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.ODataPathTemplate">
             <summary>
@@ -1898,6 +1938,15 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.ODataPathTemplate.GenerateODataPath(Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <summary>
+            
+            </summary>
+            <param name="model"></param>
+            <param name="routeValue"></param>
+            <param name="queryString"></param>
+            <returns></returns>
+        </member>
         <member name="P:Microsoft.AspNetCore.OData.Routing.Template.ODataPathTemplate.Template">
             <summary>
             
@@ -1912,6 +1961,40 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.ODataSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <summary>
+            
+            </summary>
+            <param name="model"></param>
+            <param name="previous"></param>
+            <param name="routeValue"></param>
+            <param name="queryString"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Template.PropertyCatchAllSegmentTemplate">
+            <summary>
+            Represents a template that could match an <see cref="T:Microsoft.AspNetCore.OData.Routing.Template.ODataSegmentTemplate"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.PropertyCatchAllSegmentTemplate.#ctor(Microsoft.OData.Edm.IEdmStructuredType)">
+            <summary>
+            
+            </summary>
+            <param name="declaredType"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Template.PropertyCatchAllSegmentTemplate.Template">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Template.PropertyCatchAllSegmentTemplate.StructuredType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.PropertyCatchAllSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.PropertySegmentTemplate">
             <summary>
@@ -1940,17 +2023,15 @@
             
             </summary>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.PropertySegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.RefSegmentTemplate">
             <summary>
             Represents a template that could match a $ref segment.
             </summary>
         </member>
-        <member name="P:Microsoft.AspNetCore.OData.Routing.Template.RefSegmentTemplate.Instance">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.RefSegmentTemplate.#ctor">
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.RefSegmentTemplate.#ctor(Microsoft.OData.Edm.IEdmNavigationProperty)">
             <summary>
             
             </summary>
@@ -1959,6 +2040,14 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Template.RefSegmentTemplate.Navigation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.RefSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.SingletonSegmentTemplate">
             <summary>
@@ -1981,25 +2070,32 @@
             
             </summary>
         </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.SingletonSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
+        </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Template.ValueSegmentTemplate">
             <summary>
             Represents a template that could match a $ref segment.
             </summary>
         </member>
-        <member name="P:Microsoft.AspNetCore.OData.Routing.Template.ValueSegmentTemplate.Instance">
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.ValueSegmentTemplate.#ctor(Microsoft.OData.Edm.IEdmType)">
             <summary>
             
             </summary>
-        </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.ValueSegmentTemplate.#ctor">
-            <summary>
-            
-            </summary>
+            <param name="previousType"></param>
         </member>
         <member name="P:Microsoft.AspNetCore.OData.Routing.Template.ValueSegmentTemplate.Template">
             <summary>
             
             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Template.ValueSegmentTemplate.ValueType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Template.ValueSegmentTemplate.GenerateODataSegment(Microsoft.OData.Edm.IEdmModel,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.QueryString)">
+            <inheritdoc />
         </member>
     </members>
 </doc>

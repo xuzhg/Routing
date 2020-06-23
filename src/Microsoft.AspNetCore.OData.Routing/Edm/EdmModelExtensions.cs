@@ -5,11 +5,57 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.AspNetCore.OData.Routing
 {
     internal static class EdmModelExtensions
     {
+        internal static bool IsResourceOrCollectionResource(this IEdmTypeReference edmType)
+        {
+            if (edmType.IsEntity() || edmType.IsComplex())
+            {
+                return true;
+            }
+
+            if (edmType.IsCollection())
+            {
+                return IsResourceOrCollectionResource(edmType.AsCollection().ElementType());
+            }
+
+            return false;
+        }
+
+        internal static IEdmEntitySetBase GetTargetEntitySet(this IEdmOperation operation, IEdmNavigationSource source, IEdmModel model)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            if (operation.IsBound && operation.Parameters.Any())
+            {
+                IEdmOperationParameter parameter;
+                Dictionary<IEdmNavigationProperty, IEdmPathExpression> path;
+                IEdmEntityType lastEntityType;
+                IEnumerable<EdmError> errors;
+
+                if (operation.TryGetRelativeEntitySetPath(model, out parameter, out path, out lastEntityType, out errors))
+                {
+                    IEdmNavigationSource target = source;
+
+                    foreach (var navigation in path)
+                    {
+                        target = target.FindNavigationTarget(navigation.Key, navigation.Value);
+                    }
+
+                    return target as IEdmEntitySetBase;
+                }
+            }
+
+            return null;
+        }
+
         internal static string GetNavigationSourceUrl(this IEdmModel model, IEdmNavigationSource navigationSource)
         {
             if (model == null)

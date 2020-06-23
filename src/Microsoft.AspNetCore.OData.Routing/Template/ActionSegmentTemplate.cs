@@ -2,7 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.AspNetCore.OData.Routing.Template
 {
@@ -48,5 +51,18 @@ namespace Microsoft.AspNetCore.OData.Routing.Template
         /// 
         /// </summary>
         public IEdmAction Action { get; }
+
+        /// <inheritdoc />
+        public override ODataPathSegment GenerateODataSegment(IEdmModel model,
+            IEdmNavigationSource previous, RouteValueDictionary routeValue, QueryString queryString)
+        {
+            IEdmNavigationSource targetset = null;
+            if (Action.ReturnType != null)
+            {
+                targetset = Action.GetTargetEntitySet(previous, model);
+            }
+
+            return new OperationSegment(Action, targetset as IEdmEntitySetBase);
+        }
     }
 }

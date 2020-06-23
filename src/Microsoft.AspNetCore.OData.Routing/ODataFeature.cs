@@ -10,6 +10,7 @@ using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.AspNetCore.OData.Routing
 {
@@ -32,6 +33,11 @@ namespace Microsoft.AspNetCore.OData.Routing
         {
             totalCountSet = false;
         }
+
+        /// <summary>
+        /// Gets or sets the OData path.
+        /// </summary>
+        public IEdmModel Model { get; set; }
 
         /// <summary>
         /// Gets or sets the OData path.

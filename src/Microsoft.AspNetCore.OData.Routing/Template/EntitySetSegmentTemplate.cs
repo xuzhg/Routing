@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 using System;
 
 namespace Microsoft.AspNetCore.OData.Routing.Template
@@ -29,5 +32,12 @@ namespace Microsoft.AspNetCore.OData.Routing.Template
         /// 
         /// </summary>
         public IEdmEntitySet EntitySet { get; }
+
+        /// <inheritdoc />
+        public override ODataPathSegment GenerateODataSegment(IEdmModel model,
+            IEdmNavigationSource previous, RouteValueDictionary routeValue, QueryString queryString)
+        {
+            return new EntitySetSegment(EntitySet);
+        }
     }
 }
