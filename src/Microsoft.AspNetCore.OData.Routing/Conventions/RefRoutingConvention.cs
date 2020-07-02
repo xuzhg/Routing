@@ -27,7 +27,8 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// <returns></returns>
         public virtual bool AppliesToController(ODataControllerActionContext context)
         {
-            return context?.Singleton != null;
+            // bound operation supports for entity set and singleton
+            return context?.EntitySet != null || context?.Singleton != null;
         }
 
         /// <summary>

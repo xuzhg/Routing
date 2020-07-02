@@ -456,65 +456,28 @@
             </summary>
             <param name="context"></param>
         </member>
-        <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConventionProvider">
+        <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConvention">
             <summary>
             
             </summary>
         </member>
-        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConventionProvider.Order">
+        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConvention.Order">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConventionProvider.CanApply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConvention.AppliesToController(Microsoft.AspNetCore.OData.Routing.Conventions.ODataControllerActionContext)">
             <summary>
             
             </summary>
-            <param name="controller"></param>
+            <param name="context"></param>
+            <returns></returns>
         </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConventionProvider.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConvention.AppliesToAction(Microsoft.AspNetCore.OData.Routing.Conventions.ODataControllerActionContext)">
             <summary>
             
             </summary>
-            <param name="action"></param>
-        </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.FunctionRoutingConventionProvider.Apply(System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
-            <summary>
-            
-            </summary>
-            <param name="prefix"></param>
-            <param name="model"></param>
-            <param name="action"></param>
-        </member>
-        <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.IODataActionConvention">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.IODataActionConvention.Order">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.IODataActionConvention.CanApply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
-            <summary>
-            
-            </summary>
-            <param name="controller"></param>
-        </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.IODataActionConvention.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
-            <summary>
-            
-            </summary>
-            <param name="action"></param>
-        </member>
-        <member name="M:Microsoft.AspNetCore.OData.Routing.Conventions.IODataActionConvention.Apply(System.String,Microsoft.OData.Edm.IEdmModel,Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
-            <summary>
-            
-            </summary>
-            <param name="prefix"></param>
-            <param name="model"></param>
-            <param name="action"></param>
+            <param name="context"></param>
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.IODataControllerActionConvention">
             <summary>
@@ -540,11 +503,6 @@
             <param name="context"></param>
         </member>
         <member name="T:Microsoft.AspNetCore.OData.Routing.Conventions.IODataControllerConvention">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:Microsoft.AspNetCore.OData.Routing.Conventions.IODataControllerConvention.Conventions">
             <summary>
             
             </summary>

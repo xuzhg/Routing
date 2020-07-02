@@ -8,23 +8,18 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
 {
     internal class ODataRoutingConventionFactory
     {
-        private readonly IODataActionConvention[] _odataRoutingConventionProviders;
+    //    private readonly IODataActionConvention[] _odataRoutingConventionProviders;
 
         public ODataRoutingConventionFactory(
-           IEnumerable<IODataActionConvention> odataRoutingConventionProviders,
+     //      IEnumerable<IODataActionConvention> odataRoutingConventionProviders,
            IOptions<ODataRoutingOptions> options)
         {
-            if (odataRoutingConventionProviders == null)
-            {
-                throw new ArgumentNullException(nameof(odataRoutingConventionProviders));
-            }
-
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
-            _odataRoutingConventionProviders = odataRoutingConventionProviders.OrderBy(p => p.Order).ToArray();
+         //   _odataRoutingConventionProviders = odataRoutingConventionProviders.OrderBy(p => p.Order).ToArray();
           //  _conventions = options.Value.Conventions;
         }
 

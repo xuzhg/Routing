@@ -60,6 +60,25 @@ namespace Microsoft.AspNetCore.OData.Routing.Extensions
             return services;
         }
 
+        ///// <summary>
+        ///// Consider to
+        ///// </summary>
+        ///// <param name="builder"></param>
+        ///// <returns></returns>
+        //public static IODataBuilder AddOData(this IMvcBuilder builder)
+        //{
+        //    // 
+        //    return builder;
+        //}
+
+        public static IServiceCollection AddOData(this IServiceCollection services, Action<ODataRoutingOptions> setupAction)
+        {
+            
+            AddODataRoutingServices(services);
+            services.Configure(setupAction);
+            return services;
+        }
+
         /// <summary>
         /// 
         /// </summary>

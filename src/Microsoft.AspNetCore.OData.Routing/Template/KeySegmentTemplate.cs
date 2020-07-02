@@ -45,11 +45,13 @@ namespace Microsoft.AspNetCore.OData.Routing.Template
             var keys = entityType.Key().ToArray();
             if (keys.Length == 1)
             {
+                // {key}
                 Template = $"{{{keyPrefix}}}";
                 _keyMappings[keys[0].Name] = ($"{keyPrefix}", keys[0].Type);
             }
             else
             {
+                // Id1={Id1},Id2={Id2}
                 foreach (var key in keys)
                 {
                     _keyMappings[key.Name] = ($"{keyPrefix}{key.Name}", key.Type);

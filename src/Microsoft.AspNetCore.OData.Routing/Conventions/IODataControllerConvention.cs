@@ -17,7 +17,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// <summary>
         /// 
         /// </summary>
-        public ICollection<IODataActionConvention> Conventions { get; }
+        //public ICollection<IODataActionConvention> Conventions { get; }
 
         /// <summary>
         /// 
@@ -33,7 +33,7 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
     /// </summary>
     public class ODataModelAttributeConvention : IODataControllerConvention
     {
-        public ICollection<IODataActionConvention> Conventions { get; }
+        //public ICollection<IODataActionConvention> Conventions { get; }
 
         /// <summary>
         /// 
